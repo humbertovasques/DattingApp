@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text;
 using API.Data;
 using API.Interfaces;
 using API.Services;
@@ -39,13 +40,13 @@ namespace API
             });
             services.AddControllers();
             services.AddCors();
-            services.AddAuthentication(JwtBearerDefauts.AuthenticationScheme)
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigninKey = new SymmetricSecurityKey(Encoding.UTF8,GetBytes(_config["TokenKey"])),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["TokenKey"])),
                         ValidateIssuer = false,
                         ValidateAudience = false,
 
@@ -74,6 +75,7 @@ namespace API
             app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
             // app.UseCors(x => x.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
